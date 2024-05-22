@@ -14,9 +14,11 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethodsInterface>(
     name: {
       type: String,
     },
+    lastName: {
+      type: String,
+    },
     phoneNumber: {
       type: String,
-      required: true,
       unique: true,
     },
     isPhoneVerified: {
@@ -44,6 +46,16 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethodsInterface>(
     password: {
       type: String,
       select: false,
+    },
+    email: {
+      type: String,
+      require: true,
+    },
+    resetPasswordToken: {
+      type : String,
+    },
+    resetPasswordExpires: {
+      type: Date,
     },
   },
   { timestamps: true }
@@ -90,12 +102,13 @@ export async function userSeeder() {
   const superUser = await User.findOne({ username: "admin" });
   if (!superUser) {
     const user = new User({
-      name: "ادمین کل",
+      name: "Mojtaba Shabanzadeh",
       username: process.env.adminUsername,
       phoneNumber: "09117605487",
+      email: "mojtabashhh@gmail.com",
       password: process.env.adminPassword,
       role: ROLES.admin,
-      ssn: "0000000000",
+      ssn: "2580717668",
       status: "active",
     });
 

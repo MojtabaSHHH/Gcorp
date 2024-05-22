@@ -1,5 +1,5 @@
 import { body } from "express-validator";
-import User from "./user.model";
+import User from "../user/user.model";
 
 export const update = [
   body("name")
@@ -27,10 +27,7 @@ export const update = [
       }
     }),
   body("password").isString().optional(),
-  body("email")
-  .isEmail()
-  .optional()
-  .withMessage("ایمیل باید معتبر باشد"),
+  body("email").isEmail().optional().withMessage("ایمیل باید معتبر باشد"),
 ];
 
 export const create = [
@@ -53,7 +50,7 @@ export const create = [
         }
       });
     }),
-    body("email")
+  body("email")
     .isEmail()
     .withMessage("ایمیل باید معتبر باشد")
     .custom((value) => {

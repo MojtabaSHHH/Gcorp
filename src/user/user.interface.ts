@@ -4,6 +4,7 @@ import { RoleType } from "../utils/const";
 export interface UserInterface {
     _id?: string | Types.ObjectId;
     name?: string;
+    lastName?: string;
     phoneNumber: string;
     isPhoneVerified?: boolean;
     sig?: string;
@@ -11,7 +12,10 @@ export interface UserInterface {
     status?: string;
     ssn?: string;
     username?: string;
-    password?: string;
+    password: string;
+    email: string;
+    resetPasswordToken?: string;
+    resetPasswordExpires?: Date;
 }
 
 export interface UserMethodsInterface {
