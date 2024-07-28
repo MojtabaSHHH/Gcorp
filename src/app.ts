@@ -1,15 +1,16 @@
-import express ,{ NextFunction, Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import router from "./router";
 import createError from "http-errors";
-
+import localization from "./middleware/localization";
 
 const index = express();
 
 index.use(express.json());
+index.use(localization);
 
 index.use("/", router);
 
-index.use("/", async (req :Request, res : Response) => {
+index.use("/", async (req: Request, res: Response) => {
   res.send("درحال اجرا");
 });
 

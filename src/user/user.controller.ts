@@ -1,28 +1,37 @@
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
 import User from "./user.model";
-import {
-  getUserById,
-  updateUser,
-} from "./user.service";
+import { getUserById, updateUser } from "./user.service";
 import catchAsync from "../middleware/catchAsync";
 import { responseGenerator } from "../utils/response";
 import ApiErr from "../utils/ApiErr";
+import { UserInterface } from "./user.interface";
+
+const localizeUser = (user: UserInterface, t: any) => {
+  return {
+    name: user.name,
+    lastName: user.lastName,
+    phoneNumber: user.phoneNumber,
+    isPhoneVerified: user.isPhoneVerified,
+    sig: user.sig,
+    role: t(`user.roleOptions.${user.role}`),
+    ssn: user.ssn,
+    status: t(`user.statusOptions.${user.status}`),
+    username: user.username,
+    email: user.email,
+    gender: t(`user.genderOptions.${user.gender}`),
+    resetPasswordToken: user.resetPasswordToken,
+    resetPasswordExpires: user.resetPasswordExpires,
+  };
+};
 
 export const getOne = catchAsync(async (req: Request, res: Response) => {
-  try {
-    const user = req.user;
+  const user = req.user as UserInterface;
 
-    if (!user) return res.status(StatusCodes.NOT_FOUND).send(null);
+  if (!user) return res.status(StatusCodes.NOT_FOUND).send(null);
 
-    return res.send(responseGenerator(user));
-  } catch (error: any) {
-    // todo fix any
-    throw new ApiErr(
-      error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
-      error
-    );
-  }
+  const localizedUser = localizeUser(user, req.t);
+  return res.send(responseGenerator(localizedUser));
 });
 
 export const createOne = catchAsync(async (req: Request, res: Response) => {
@@ -30,9 +39,9 @@ export const createOne = catchAsync(async (req: Request, res: Response) => {
     const user = new User({ ...req.body });
     await user.save();
 
-    return res.send(responseGenerator(user));
+    const localizedUser = localizeUser(user, req.t);
+    return res.send(responseGenerator(localizedUser));
   } catch (error: any) {
-    // todo fix any
     throw new ApiErr(
       error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
       error
@@ -40,37 +49,44 @@ export const createOne = catchAsync(async (req: Request, res: Response) => {
   }
 });
 
-export const updateById = async (req: Request, res: Response) => {
+export const updateById = catchAsync(async (req: Request, res: Response) => {
   try {
-    const user = await updateUser(req.params.id, req.body);
-    res.json({ data: user, status: "success" });
-  } catch (err: any) {
-    // todo fix any
-    res.status(500).json({ error: err.message });
+    const user = (await updateUser(req.params.id, req.body)) as UserInterface;
+    const localizedUser = localizeUser(user, req.t);
+    res.json({ data: localizedUser, status: "success" });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
   }
-};
+});
 
 export const getOneWithId = catchAsync(async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    if (!id)
+    if (!id) {
       return res
         .status(StatusCodes.BAD_REQUEST)
-        .send({ message: "id is required" });
-    const result: any = await getUserById(id); // todo fix any
-    if (!result)
+        .send({ message: req.t("errors.idRequired") });
+    }
+    const result = await getUserById(id);
+    if (!result) {
       return res
         .status(StatusCodes.NOT_FOUND)
-        .send({ message: "user not found" });
-    const { _id, __v, updatedAt, createdAt, ...rest } = result._doc;
-    res.send({ data: { ...rest } });
+        .send({ message: req.t("errors.userNotFound") });
+    }
+    const { _id, __v, updatedAt, createdAt, ...rest } = result;
+
+    const localizedUser = {
+      ...rest,
+      role: req.t(`user.roleOptions.${rest.role}`),
+      status: req.t(`user.statusOptions.${rest.status}`),
+      gender: req.t(`user.genderOptions.${rest.gender}`),
+    };
+
+    res.send({ data: localizedUser });
   } catch (error: any) {
-    // todo fix any
-    // console.log(error);
     throw new ApiErr(
       error.statusCode || StatusCodes.INTERNAL_SERVER_ERROR,
       error
     );
   }
 });
-

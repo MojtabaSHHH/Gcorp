@@ -19,18 +19,17 @@ export async function getUserFromCookie(req: Request, lean = false) {
   return res;
 }
 
-export async function getUserById(id: string) {
-  return User.findById(id);
-}
+export const getUserById = async (
+  id: string
+): Promise<UserInterface | null> => {
+  return User.findById(id).lean().exec();
+};
 
-export const updateUser = async (id: any, reqUser: any) => {
-  const user = await User.findById(id);
-  if (user)
-    Object.keys(reqUser).map((key) => {
-      (user as any)[key] = reqUser[key];
-    });
-  await user?.save();
-  return user;
+export const updateUser = async (
+  id: string,
+  updateData: Partial<UserInterface>
+): Promise<UserInterface | null> => {
+  return User.findByIdAndUpdate(id, updateData, { new: true }).lean().exec();
 };
 
 export const IsAdmin = (user: UserInterface) => {

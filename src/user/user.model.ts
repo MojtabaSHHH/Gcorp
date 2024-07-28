@@ -35,6 +35,7 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethodsInterface>(
     },
     ssn: {
       type: String,
+      unique: true,
     },
     status: {
       type: String,
@@ -42,6 +43,7 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethodsInterface>(
     },
     username: {
       type: String,
+      unique: true,
     },
     password: {
       type: String,
@@ -50,9 +52,15 @@ const userSchema = new Schema<UserInterface, UserModel, UserMethodsInterface>(
     email: {
       type: String,
       require: true,
+      unique: true,
+    },
+    gender: {
+      type: String,
+      enum: ["male", "female"],
+      required: true,
     },
     resetPasswordToken: {
-      type : String,
+      type: String,
     },
     resetPasswordExpires: {
       type: Date,

@@ -1,0 +1,70 @@
+{
+  "user": {
+    "name": "Name",
+    "lastName": "Last Name",
+    "phoneNumber": "Phone Number",
+    "isPhoneVerified": "Is Phone Verified",
+    "sig": "Signature",
+    "role": "Role",
+    "ssn": "Social Security Number",
+    "status": "Status",
+    "username": "Username",
+    "password": "Password",
+    "email": "Email",
+    "gender": "Gender",
+    "resetPasswordToken": "Reset Password Token",
+    "resetPasswordExpires": "Reset Password Expires",
+    "genderOptions": {
+      "male": "Male",
+      "female": "Female"
+    },
+    "statusOptions": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "roleOptions": {
+      "user": "User",
+      "admin": "Admin"
+    }
+  },
+  "errors": {
+    "idRequired": "ID is required",
+    "userNotFound": "User not found",
+    "internalServerError": "Internal server error",
+    "notFound": "Resource not found"
+  },
+  "weblog": {
+    "id": "ID",
+    "title": "Title",
+    "thumbnail": "Thumbnail",
+    "image": "Image",
+    "content": "Content",
+    "status": "Status",
+    "publishedAt": "Published At",
+    "publishedBy": "Published By",
+    "createdBy": "Created By",
+    "status_values": {
+      "draft": "Draft",
+      "published": "Published"
+    },
+    "notFound": "Weblog not found",
+    "creationFailed": "Weblog creation failed",
+    "invalidStatus": "Invalid status"
+  },
+  "portfolio": {
+    "title": "Title",
+    "thumbnail": "Thumbnail",
+    "image": "Image",
+    "content": "Content",
+    "fieldOfActivity": "field Of Activity",
+    "date": "Date",
+    "status": "Status",
+    "status_values": {
+      "Active": "Active",
+      "deActive": "Diactive"
+    },
+    "notFound": "Not Found",
+    "creationFailed": "Creation Failed",
+    "invalidStatus": "Invalid status"
+  }
+}

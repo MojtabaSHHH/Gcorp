@@ -7,6 +7,7 @@ import User from "../user/user.model";
 import SmsHelper from "../utils/SmsHelper";
 import { pick, isEmpty } from "lodash";
 import OtpModel from "../OTP/otp.model";
+import RefreshTokenModel from "../refreshToken/refreshToken.model";
 
 const searchOneUser = async (obj: UserInterface, err = true) => {
   try {
@@ -108,15 +109,11 @@ const searchOneUser = async (obj: UserInterface, err = true) => {
 //   }
 // };
 
-export function setJwtAccessToken(user: UserInterface) {
-  return jwt.sign(
-    {
-      _id: user._id,
-    },
-    user.sig || (process.env.secret as string),
-    { expiresIn: Number(process.env.accessTokenLife) }
-  );
-}
+export const setJwtAccessToken = (user: any): string => {
+  return jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN_SECRET as string, {
+    expiresIn: process.env.ACCESS_TOKEN_LIFE,
+  });
+};
 
 export function setJwtRefreshToken(user: UserInterface) {
   return jwt.sign(
@@ -134,5 +131,11 @@ function parsePhoneNumber(phone: string) {
 
   return phone;
 }
+
+export const generateTokens = async (user: any) => {
+  const accessToken = setJwtAccessToken(user);
+  const refreshToken = RefreshTokenModel.createToken(user);
+  return { accessToken, refreshToken };
+};
 
 export { searchOneUser, parsePhoneNumber };

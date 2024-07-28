@@ -1,0 +1,70 @@
+{
+  "user": {
+    "name": "نام",
+    "lastName": "نام خانوادگی",
+    "phoneNumber": "شماره تلفن",
+    "isPhoneVerified": "تایید تلفن",
+    "sig": "امضا",
+    "role": "نقش",
+    "ssn": "شماره شناسنامه",
+    "status": "وضعیت",
+    "username": "نام کاربری",
+    "password": "رمز عبور",
+    "email": "ایمیل",
+    "gender": "جنسیت",
+    "resetPasswordToken": "توکن بازنشانی رمز عبور",
+    "resetPasswordExpires": "تاریخ انقضای توکن بازنشانی رمز عبور",
+    "genderOptions": {
+      "male": "مرد",
+      "female": "زن"
+    },
+    "statusOptions": {
+      "active": "فعال",
+      "inactive": "غیرفعال"
+    },
+    "roleOptions": {
+      "user": "کاربر",
+      "admin": "مدیر"
+    }
+  },
+  "errors": {
+    "idRequired": "شناسه لازم است",
+    "userNotFound": "کاربر پیدا نشد",
+    "internalServerError": "خطای سرور داخلی",
+    "notFound": "منبع پیدا نشد"
+  },
+  "weblog": {
+    "id": "شناسه",
+    "title": "عنوان",
+    "thumbnail": "تصویر بندانگشتی",
+    "image": "تصویر",
+    "content": "محتوا",
+    "status": "وضعیت",
+    "publishedAt": "تاریخ انتشار",
+    "publishedBy": "منتشر شده توسط",
+    "createdBy": "ایجاد شده توسط",
+    "status_values": {
+      "draft": "پیش‌نویس",
+      "published": "منتشر شده"
+    },
+    "notFound": "وبلاگ پیدا نشد",
+    "creationFailed": "ایجاد وبلاگ ناموفق بود",
+    "invalidStatus": "وضعیت نامعتبر است"
+  },
+  "portfolio": {
+    "title": "عنوان",
+    "thumbnail": "تصویر بندانگشتی",
+    "image": "تصویر",
+    "content": "محتوا",
+    "fieldOfActivity": "حوزه فعالیت",
+    "date": "تاریخ",
+    "status": "وضعیت",
+    "status_values": {
+      "active": "فعال",
+      "deActive": "غیر فعال"
+    },
+    "notFound": "نمونه کار پیدا نشد",
+    "creationFailed": "ایجاد نمونه کار ناموفق بود",
+    "invalidStatus": "وضعیت نامعتبر است"
+  }
+}

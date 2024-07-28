@@ -5,13 +5,13 @@ import { ROLES } from "../utils/const";
 import _ from "lodash";
 import { UserInterface } from "../user/user.interface";
 
-export const createAdminService = async (body: any) => {
+export const createAdminService = async (
+  body: Partial<UserInterface>
+): Promise<UserInterface> => {
   try {
-    const user: any = await new User({
-      ...body,
-    });
+    const user = new User(body);
     await user.save();
-    return user;
+    return user.toObject();
   } catch (error: any) {
     console.error(error);
     throw new ApiErr(
@@ -21,21 +21,25 @@ export const createAdminService = async (body: any) => {
   }
 };
 
-export const updateAdminService = async (id: any, reqUser: any) => {
-  const user = await User.findById(id);
-  if (user)
-    Object.keys(reqUser).map((key) => {
-      (user as any)[key] = reqUser[key];
+export const updateAdminService = async (
+  id: string,
+  reqUser: any
+): Promise<UserInterface | null> => {
+  const user: any = await User.findById(id).lean();
+  if (user) {
+    Object.keys(reqUser).forEach((key) => {
+      user[key] = reqUser[key];
     });
-  await user?.save();
-  return user;
+    await User.findByIdAndUpdate(id, user);
+    return user;
+  }
+  return null;
 };
 
 export async function getAdminsService(query: any) {
-  // todo fix any
   const filter: any = {}; // todo fix any
 
-  Object.keys(query).map(async (key) => {
+  Object.keys(query).forEach((key) => {
     if (key === "role") {
       filter.$and = [
         ...(filter.$and || []),
@@ -61,36 +65,20 @@ export async function getAdminsService(query: any) {
       return;
     }
   });
+
   if (query.query) {
     filter.$or = [
-      {
-        name: { $regex: new RegExp(query.query?.toLowerCase(), "i") },
-      },
-      {
-        lastName: { $regex: new RegExp(query.query?.toLowerCase(), "i") },
-      },
-      {
-        username: { $regex: new RegExp(query.query?.toLowerCase(), "i") },
-      },
-      {
-        ssn: { $regex: new RegExp(query.query?.toLowerCase(), "i") },
-      },
-      {
-        phoneNumber: { $regex: new RegExp(query.query?.toLowerCase(), "i") },
-      },
-      {
-        role: { $regex: new RegExp(query.query?.toLowerCase(), "i") },
-      },
-      {
-        email: { $regex: new RegExp(query.query?.toLowerCase(), "i") },
-      },
+      { name: { $regex: new RegExp(query.query?.toLowerCase(), "i") } },
+      { lastName: { $regex: new RegExp(query.query?.toLowerCase(), "i") } },
+      { username: { $regex: new RegExp(query.query?.toLowerCase(), "i") } },
+      { ssn: { $regex: new RegExp(query.query?.toLowerCase(), "i") } },
+      { phoneNumber: { $regex: new RegExp(query.query?.toLowerCase(), "i") } },
+      { role: { $regex: new RegExp(query.query?.toLowerCase(), "i") } },
+      { email: { $regex: new RegExp(query.query?.toLowerCase(), "i") } },
     ];
   }
 
-  const queryFilters = {
-    ...filter,
-    role: { $ne: ROLES.user },
-  };
+  const queryFilters = { ...filter, role: { $ne: ROLES.user } };
 
   const page = query.page || 1;
   const limit = query.limit || 10;
@@ -100,9 +88,11 @@ export async function getAdminsService(query: any) {
     skip: (page - 1) * limit,
   };
 
-  const data = await User.find(queryFilters, undefined, pagination).sort({
-    createdAt: -1,
-  });
+  const data = await User.find(queryFilters, undefined, pagination)
+    .lean()
+    .sort({
+      createdAt: -1,
+    });
 
   const count = await User.countDocuments(queryFilters);
 
@@ -116,7 +106,7 @@ export async function getAllUsers(query: any, user: UserInterface) {
   const isAdmin = user.role === ROLES.admin;
   const filter: any = {}; // todo fix any
 
-  Object.keys(query).map(async (key) => {
+  Object.keys(query).forEach((key) => {
     if (key === "status") {
       filter.$and = [
         ...(filter.$or || []),
@@ -134,27 +124,13 @@ export async function getAllUsers(query: any, user: UserInterface) {
 
   if (query.query) {
     filter.$or = [
-      {
-        name: { $regex: new RegExp(query.query?.toLowerCase(), "i") },
-      },
-      {
-        lastName: { $regex: new RegExp(query.query?.toLowerCase(), "i") },
-      },
-      {
-        username: { $regex: new RegExp(query.query?.toLowerCase(), "i") },
-      },
-      {
-        ssn: { $regex: new RegExp(query.query?.toLowerCase(), "i") },
-      },
-      {
-        phoneNumber: { $regex: new RegExp(query.query?.toLowerCase(), "i") },
-      },
-      {
-        role: { $regex: new RegExp(query.query?.toLowerCase(), "i") },
-      },
-      {
-        email: { $regex: new RegExp(query.query?.toLowerCase(), "i") },
-      },
+      { name: { $regex: new RegExp(query.query?.toLowerCase(), "i") } },
+      { lastName: { $regex: new RegExp(query.query?.toLowerCase(), "i") } },
+      { username: { $regex: new RegExp(query.query?.toLowerCase(), "i") } },
+      { ssn: { $regex: new RegExp(query.query?.toLowerCase(), "i") } },
+      { phoneNumber: { $regex: new RegExp(query.query?.toLowerCase(), "i") } },
+      { role: { $regex: new RegExp(query.query?.toLowerCase(), "i") } },
+      { email: { $regex: new RegExp(query.query?.toLowerCase(), "i") } },
     ];
   }
 
@@ -167,7 +143,9 @@ export async function getAllUsers(query: any, user: UserInterface) {
     limit,
     skip: (page - 1) * limit,
   };
+
   const data = await User.find(queryFilters, undefined, pagination)
+    .lean()
     .sort({
       createdAt: -1,
     })
